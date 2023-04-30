@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class UserInterface {
 
     private Scanner scan;
-    private ArrayList<SocialMedia> user;
+    private ArrayList<User> user;
     private ArrayList<Messaging> messaging;
 
     public UserInterface(Scanner scan) {
@@ -63,7 +63,7 @@ public class UserInterface {
         String nameSurname = this.scan.nextLine();
         System.out.println("Password");
         int password = Integer.valueOf(this.scan.nextLine());
-        this.user.add(new SocialMedia(nameSurname, password));
+        this.user.add(new User(nameSurname, password));
         System.out.println("You have successfuly sing up");
     }
 
@@ -119,8 +119,9 @@ public class UserInterface {
             while (true) {
                 if (this.user.get(index).getConnectionInvitations().isEmpty()) {
                     System.out.println("No pending invitations");
-                } else {
+                }else{
                     this.user.get(index).printConnectionInvitations();
+                }
                     System.out.println("Type the name of the user you want to connect(Press enter to get back)");
                     String name = this.scan.nextLine();
                     if (name.equals("")) {
@@ -128,14 +129,16 @@ public class UserInterface {
                     } else if (searchForUser(name)) {
                         int index2 = findUserindex(name);
                         this.user.get(index).addConnections(this.user.get(index2));
+                        this.user.get(index).removeConnectionInvitations(name);
                         System.out.println("The connection is made sucsesfully");
                     } else {
                         System.out.println("Type the name correctly");
                     }
-                }
+                
             }
         }
     }
+
 
     public void messaging(int index) {
         while (true) {
@@ -157,6 +160,7 @@ public class UserInterface {
                             break;
                         } else {
                             this.messaging.get(index3).addMessaging(this.user.get(index).getName(), message);
+                            this.messaging.get(index3).printMessage();
                         }
                     }
                 } else {
@@ -169,6 +173,7 @@ public class UserInterface {
                             break;
                         } else {
                             this.messaging.get(index4).addMessaging(this.user.get(index).getName(), message);
+                            this.messaging.get(index4).printMessage();
                         }
                     }
                 }
@@ -202,7 +207,7 @@ public class UserInterface {
     }
 
     public boolean searchForUser(String name, int password) {
-        for (SocialMedia user : this.user) {
+        for (User user : this.user) {
             if (user.getName().equals(name)
                     && user.getPassword() == password) {
                 return true;
@@ -212,7 +217,7 @@ public class UserInterface {
     }
 
     public boolean searchForUser(String name) {
-        for (SocialMedia socialMedia : this.user) {
+        for (User socialMedia : this.user) {
             if (socialMedia.getName().equals(name)) {
                 return true;
             }
